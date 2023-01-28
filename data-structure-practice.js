@@ -95,16 +95,60 @@ class AVLTree {
         this.root = this.insertHelper(this.root, data);
     }
 
+    inorderSuccessor(node) {
+        node = node.right;
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    rebalance(node) {
+        node.height = this.calculateNewHeight(node);
+        var balance = this.balance(node);
+        if (balance > 1) {
+            if (this.balance(node.left) == -1) {
+                node.left = this.rotateLeft(node.left);
+            }
+            return this.rotateRight(node);
+        }
+        if (balance < -1) {
+            if (this.balance(node.right) == 1) {
+                node.right = this.rotateRight(node.right);
+            }
+            return this.rotateLeft(node);
+        }
+        return node;
+    }
+    
     deleteHelper(node, data) {
         if (node == null) return null;
 
         if (data > node.data) {
-            this.deleteHelper(node.right, data);
+            // stuff under this node is changing, we gotta rebalance it later.
+            node.right = this.deleteHelper(node.right, data);
         } else if (data < node.data) {
-            this.deleteHelper(node.left, data);
+            // stuff under this node is changing, we gotta rebalance it later.
+            node.left = this.deleteHelper(node.left, data);
         } else {
-            
+            if (node.left && node.right) {
+                node.data = this.inorderSuccessor(node).data;
+                node.right = this.deleteHelper(node.right, node.data);
+                node = this.rebalance(node);
+                return node;
+            } else if (node.left) {
+                // rebalance not needed for this node.
+                return node.left;
+            } else if (node.right) {
+                // rebalance not needed for this node
+                return node.right;
+            } else {
+                return null;
+            }
         }
+
+        node = this.rebalance(node);
+        return node;
     }
 
     delete(data) {
@@ -138,4 +182,8 @@ var tree = new AVLTree();
 [5, 3, 2, 1, 6, 8, 0].forEach((elem) => {
     tree.insert(elem);
 });
+tree.print();
+tree.delete(6);
+tree.delete(8);
+tree.delete(5);
 tree.print();
