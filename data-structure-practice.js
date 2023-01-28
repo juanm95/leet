@@ -21,7 +21,7 @@ class Queue {
 }
 
 class TreeNode {
-    left; right;
+    left; right; height = 1;
     constructor(data) {
         this.data = data;
     }
@@ -32,29 +32,83 @@ class AVLTree {
     constructor() {
     }
 
-    insert(num) {
-        if (!this.root) {
-            this.root = new TreeNode(num);
+    height(node) {
+        return node ? node.height : 0;
+    }
+
+    balance(node) {
+        return this.height(node.left) - this.height(node.right);
+    }
+
+    calculateNewHeight(node) {
+        return 1 + Math.max(this.height(node.left), this.height(node.right));
+    }
+
+    rotateRight(node) {
+        var newRoot = node.left;
+        node.left = newRoot.right;
+        newRoot.right = node;
+        node.height = this.calculateNewHeight(node);
+        newRoot.height = this.calculateNewHeight(newRoot);
+        return newRoot;
+    }
+
+    rotateLeft(node) {
+        var newRoot = node.right;
+        node.right = newRoot.left;
+        newRoot.left = node;
+        node.height = this.calculateNewHeight(node);
+        newRoot.height = this.calculateNewHeight(newRoot);
+        return newRoot;
+    }
+
+    insertHelper(node, data) {
+        // Base case, just return a new node, the calling function will then put that node in the right place.
+        if (node == null) return new TreeNode(data);
+
+        if (data > node.data) {
+            node.right = this.insertHelper(node.right, data);
         } else {
-            var node = this.root;
-            while (node) {
-                if (num > node.data) {
-                    if (node.right) {
-                        node = node.right;
-                    } else {
-                        node.right = new TreeNode(num);
-                        break;
-                    }
-                } else {
-                    if (node.left) {
-                        node = node.left;
-                    } else {
-                        node.left = new TreeNode(num);
-                        break;
-                    }
-                }
-            }
+            node.left = this.insertHelper(node.left, data);
         }
+
+        node.height = this.calculateNewHeight(node);
+        var balance = this.balance(node);
+        if (balance > 1) {
+            if (this.balance(node.left) == -1) {
+                node.left = this.rotateLeft(node.left);
+            }
+            return this.rotateRight(node);
+        }
+        if (balance < -1) {
+            if (this.balance(node.right) == 1) {
+                node.right = this.rotateRight(node.right);
+            }
+            return this.rotateLeft(node);
+        }
+
+        // return node without rotations
+        return node;
+    }
+
+    insert(data) {
+        this.root = this.insertHelper(this.root, data);
+    }
+
+    deleteHelper(node, data) {
+        if (node == null) return null;
+
+        if (data > node.data) {
+            this.deleteHelper(node.right, data);
+        } else if (data < node.data) {
+            this.deleteHelper(node.left, data);
+        } else {
+            
+        }
+    }
+
+    delete(data) {
+        this.root = this.deleteHelper(this.root, data);
     }
 
     print() {
