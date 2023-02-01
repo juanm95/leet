@@ -1,5 +1,3 @@
-// Implement AVL
-// Implement Priority Queue
 // Implement Graph as Adjacency list and as Matrix
 // Implement Binary Tree Traversal
 // Do BFS, DFS, Bidirectional Search
@@ -178,12 +176,148 @@ class AVLTree {
     }
 }
 
-var tree = new AVLTree();
-[5, 3, 2, 1, 6, 8, 0].forEach((elem) => {
-    tree.insert(elem);
-});
-tree.print();
-tree.delete(6);
-tree.delete(8);
-tree.delete(5);
-tree.print();
+class PriorityElement {
+    constructor(element, priority) {
+        this.elem = element;
+        this.priority = priority;
+    }
+}
+class MaxQueue {
+    array; size = 0;
+    constructor(initSize = 50) {
+        this.array = new Array(initSize);
+    }
+
+    leftChildIndex(index) {
+        return index * 2;
+    }
+
+    rightChildIndex(index) {
+        return (index * 2) + 1;
+    }
+
+    getLeftChild(index) {
+        var childIndex = this.leftChildIndex(index);
+        if (childIndex >= this.array.length) {
+            return null;
+        }
+
+        return this.array[childIndex];
+    }
+
+    getRightChild(index) {
+        var childIndex = this.rightChildIndex(index);
+        if (childIndex >= this.array.length) {
+            return null;
+        }
+
+        return this.array[childIndex];
+    }
+
+    parentIndex(index) {
+        return Math.floor(index / 2);
+    }
+
+    getParent(index) {
+        var parentIndex = this.parentIndex(index);
+        if (parentIndex < 1) return null;
+
+        return this.array[parentIndex];
+    }
+
+    swap(index1, index2) {
+        var temp = this.array[index2];
+        this.array[index2] = this.array[index1];
+        this.array[index1] = temp;
+    }
+    
+    shiftUp(index) {
+        if (index < 2) return;
+        var element = this.array[index];
+        var parentIndex = this.parentIndex(index)
+        var parentElement = this.getParent(index);
+        if (element.priority > parentElement.priority) {
+            this.swap(index, parentIndex);
+            this.shiftUp(parentIndex);
+        }
+        return;
+    }
+
+    shiftDown(index) {
+        if (index > this.size) return null;
+        var newMax = index;
+        var leftChildIndex = this.leftChildIndex(index);
+        if (leftChildIndex <= this.size 
+            && this.array[leftChildIndex].priority > this.array[newMax].priority) {
+            newMax = leftChildIndex;
+        }
+
+        var rightChildIndex = this.rightChildIndex(index);
+        if (rightChildIndex <= this.size 
+            && this.array[rightChildIndex].priority > this.array[newMax].priority) {
+                newMax = rightChildIndex;
+        }
+
+        if (newMax != index) {
+            this.swap(index, newMax);
+            // newMax is now where our old parent is.
+            this.shiftDown(newMax);
+        }
+    }
+
+    insert(data, priority) {
+        this.size++;
+
+        if (this.size >= this.array.length) {
+            this.array.length = this.size * 2;
+        }
+
+        this.array[this.size] = new PriorityElement(data, priority);
+
+        this.shiftUp(this.size);
+    }
+
+    removeMax() {
+        if (this.size < 1) return null;
+        var max = this.array[1];
+        this.array[1] = this.array[this.size];
+        this.size--;
+        this.shiftDown(1);
+
+        return max;
+    }
+
+    print() {
+        console.log(this.array);
+    }
+}
+
+class AdjacencyGraph {
+    matrix = [];
+    keyToIndexMap = {};
+    indexToKeyMap = [];
+    constructor() {
+    }
+
+    add(key) {
+
+    }
+
+    connect(sourceKey, destinationKey) {
+        if (!sourceKey in this.keyToIndexMap || !destinationKey in this.keyToIndexMap) {
+            return;
+        }
+
+        var sourceIndex = this.keyToIndexMap[sourceKey];
+        var destinationKey = this.keyToIndexMap[destinationKey];
+        this.matrix[sourceIndex][destinationIndex] = true;
+    }
+
+    getNeighbors(sourceIndex) {
+        this.matrix[sourceIndex].reduce((connected, index) => {
+            if(connected) {
+                return this.indexToKeyMap[index];
+            }
+        });
+    }
+}
