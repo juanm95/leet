@@ -321,3 +321,75 @@ class AdjacencyGraph {
         });
     }
 }
+
+class Node {
+    key; neighbors = [];
+    constructor(key) {
+        this.key = key;
+    }
+    addNeighbor(node) {
+        this.neighbors.push(node);
+    }
+}
+
+class ListGraph {
+    nodes = {};
+    constructor() {}
+    addNode(key) {
+        this.nodes[key] = new Node(key);
+        return this.nodes[key];
+    }
+    getNode(key) {
+        return this.nodes[key];
+    }
+    addConnection(sourceKey, destinationKey) {
+        this.nodes[sourceKey].addNeighbor(this.nodes[destinationKey]);
+    }
+    BFS(sourceKey, destinationKey) {
+        var queue = new Queue();
+        var visitedNodes = {};
+        queue.enqueue([this.getNode(sourceKey)]);
+        while(!queue.isEmpty()) {
+            var path = queue.dequeue();
+            var lastNode = path[path.length - 1];
+            if (lastNode.key == destinationKey) {
+                return path;
+            } else {
+                lastNode.neighbors.forEach((node) => {
+                    if (!visitedNodes[node.key]) {
+                        visitedNodes[node.key] = true;
+                        queue.enqueue(path.concat(node));
+                    }
+                });
+            }
+        }
+
+        return null;
+    }
+}
+
+var listGraph = new ListGraph();
+[1, 2, 3, 4, 5].forEach((node) => {
+    listGraph.addNode(node);
+});
+[[1, 2, 3], [2, 3, 4], [3, 5], [4, 5]].forEach((nodes) => {
+    var sourceNode = nodes[0];
+    for(var i = 1; i < nodes.length; i++) {
+        listGraph.addConnection(sourceNode, nodes[i]);
+    }
+});
+
+function printPath(path) {
+    if (!path || !path.map) {
+        console.log("no path");
+        return null;
+    }
+    var pathKeys = path.map((node) => {
+        return node.key;
+    });
+    console.log(pathKeys);
+}
+printPath(listGraph.BFS(1, 5));
+printPath(listGraph.BFS(2, 5));
+printPath(listGraph.BFS(2, 3));
+printPath(listGraph.BFS(3, 1));
