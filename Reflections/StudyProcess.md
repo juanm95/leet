@@ -7,6 +7,7 @@
 1. If my solution was buggy, record them in a list of mistakes.
 1. Fix up my solution to at least the most optimal run time.
 1. Copy-paste this code into this repo. Link my reflections to this code.
+1. Do this 6 times. For the 2 hardest, do them again in 2 weeks.
 
 ## Potential changes.
 1. When working on a problem, maybe just try coding up the brute force and try to improve on it, take a more iterative approach.
