@@ -13,7 +13,7 @@
 1. When working on a problem, maybe just try coding up the brute force and try to improve on it, take a more iterative approach.
 1. Schedule in solving a problem I couldn't solve 2 weeks later as review.
 
-## Underlying Concepts
+## Questions to ask while reviewing.
 1. Why is this data structure or approach the best one for this problem?
 1. Have I done any other problem that's similar to this one, if so why are they similar? Is there a way I can leverage that similarity? How can I recognize this in the future?
 1. What problems are similar that I haven't solved yet? Schedule em.

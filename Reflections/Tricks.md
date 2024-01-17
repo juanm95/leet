@@ -1,5 +1,7 @@
 # Tricks
 
+Note: These need to be moved to my dashboard instead.
+
 * String Replacement "AABAA"
     * Frequency Map + Sliding window. As you read new characters, add them to the frequency map, and if you have to, kick out an old character by increasing start and reducing it in the frequency map.
 
@@ -20,3 +22,6 @@
 
 * Merge K Sorted Lists
     * I tried to use a min heap to go quickly find the smallest item in the list. That works in O(N log K), but the more straight forward solution is to reduce the problem size iteratively. Merging 2 lists takes linear time O(num nodes). With K lists I can combine the individual lists into half the number of lists until I have just one list. Each time I'm halving, so it's log K times, total O(N log K).
+
+* 380. Insert Delete GetRandom O(1)
+    * If you don't care about the order in an array, you can remove an item from it by swapping it with the item in the end and popping it off. This retains the place of the rest. SWAPPING seems very important for a lot of algos.
